@@ -33,9 +33,9 @@ window_sizes=pygame.display.get_window_size()
 window_width,window_height=window_sizes[0],window_sizes[1]
 
 #bird cards
-#main image
+#image sheet with bird sprites (images)
 bird_sheet=pygame.image.load("angry_birds_characters.xcf").convert_alpha()
-#the rectangles if each bird from the sheet
+#the rectangles for each bird from the sheet
 bird_extract_sizes={"terence":[4,7,165,180],
                     "matilda":[172,59,92,127],
                     "bomb":[273,65,77,123],
@@ -44,6 +44,7 @@ bird_extract_sizes={"terence":[4,7,165,180],
                     "stella":[602,106,76,77],
                     "the blues":[685,120,47,88],
                     "bubbles":[738,106,67,78]}
+
 #bird surfaces to be blitted and their sizes
 terence_image=bird_sheet.subsurface(bird_extract_sizes["terence"])
 terence_image_w,terence_image_h=terence_image.get_size()
