@@ -49,11 +49,11 @@ bird_extract_sizes={"terence":[4,7,165,180],
                     "the blues":[685,120,47,88],
                     "bubbles":[738,106,67,78]}
 
-bird_scale=1
+bird_scale=0.8
 
 #bird surfaces to be blitted and their sizes
 terence_image=bird_sheet.subsurface(bird_extract_sizes["terence"])
-terence_image=pygame.transform.smoothscale_by(terence_image,bird_scale-0.3)
+terence_image=pygame.transform.smoothscale_by(terence_image,bird_scale-0.15)
 terence_image_w,terence_image_h=terence_image.get_size()
 
 matilda_image=bird_sheet.subsurface(bird_extract_sizes["matilda"])
@@ -85,7 +85,7 @@ bubbles_image=pygame.transform.smoothscale_by(bubbles_image,bird_scale)
 bubbles_image_w,bubbles_image_h=bubbles_image.get_size()
 
 #cards
-card_scale=1
+card_scale=0.8
 card_size=(200*card_scale,250*card_scale) #4:5 ratio
 card_width,card_height=card_size[0],card_size[1]
 #card sizes
@@ -144,6 +144,12 @@ pygame.draw.rect(bubbles_card,green,inner_rect)
 pygame.draw.rect(bubbles_card,blue,outer_rect,10,5)
 bubbles_card.blit(bubbles_image,[card_width/2-bubbles_image_w//2,card_height/2-bubbles_image_h//2])
 
+#card placement
+card_placements=[(window_center_x-card_width*2-37.5,window_center_y-card_height*2-50),
+                 (window_center_x-card_width-12.5,window_center_y-card_height*2-50),
+                 (window_center_x+12.5,window_center_y-card_height*2-50),
+                 (window_center_x+card_width+37.5,window_center_y-card_height*2-50)]
+
 #card shuffle
 max_cards=False
 possible_cards={0:2,1:2,2:2,3:2,4:2,5:2,6:2,7:2}
@@ -179,7 +185,11 @@ while True:
     #window center
     pygame.draw.circle(window,red,[window_center_x,window_center_y],5)
 
-    window.blit(bubbles_card,[window_center_x-card_width-25,window_center_y-card_height//2])
-    window.blit(terence_card,[window_center_x+25,window_center_y-card_height//2])
+    #draw cards
+    for i in range(len(card_placements)):
+        window.blit(terence_card,card_placements[i])
+
+    # window.blit(bubbles_card,[window_center_x-card_width-25,window_center_y-card_height//2])
+    # window.blit(terence_card,[window_center_x+25,window_center_y-card_height//2])
 
     pygame.display.flip()
