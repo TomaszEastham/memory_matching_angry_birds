@@ -147,17 +147,26 @@ bubbles_card.blit(bubbles_image,[card_width/2-bubbles_image_w//2,card_height/2-b
 
 #card shuffle
 max_cards=False
-possible_cards={0:2,1:2,2:2,3:2,4:2,5:2,6:2,7:2}
+possible_cards={1:2,2:2,3:2,4:2,5:2,6:2,7:2,8:2}
 card_numbers=[]
 for i in range(16):
     while True:
-        card_number=random.randint(0,7)
+        card_number=random.randint(1,8)
         if possible_cards[card_number]>0:
             possible_cards[card_number]-=1
             break
     card_numbers.append(card_number)
+print(card_numbers)
 
-cards_clicked=[0]*16
+cards_clicked=[False]*16
+card_limit=2
+card_1=0
+card_2=0
+temp_r=0
+player=1
+
+#debug
+if_debug=True
 
 while True:
     mouse_position=pygame.mouse.get_pos()
@@ -173,24 +182,78 @@ while True:
                 sys.exit()
         if event.type==MOUSEBUTTONDOWN:
             if event.button==1:
-                h=1
+                for r in range(len(card_rects)):
+                    if card_rects[r].collidepoint(mouse_position):
+                        if card_limit>0:
+                            cards_clicked[r]=True
+                            if card_limit==2:
+                                card_1=card_numbers[r]
+                                temp_r=r
+                            elif card_limit==1:
+                                card_2=card_numbers[r]
+                            card_limit-=1
+                        else:
+                            if card_1==card_2:
+                                print(f"player {player} got a point")
+                            else:
+                                cards_clicked[temp_r],cards_clicked[r]=False,False
+                            card_limit=2
+                            card_1,card_2=0,0
+                            if player==1:
+                                player=2
+                            else:
+                                player=1
 
     #background colour
     window.fill(light_grey)
-    #window center dot and lines
-    pygame.draw.circle(window,red,[window_center_x,window_center_y],5)
-    pygame.draw.line(window,red,[window_center_x,0],[window_center_x,window_height],3)
-    pygame.draw.line(window, red, [0, window_center_y], [window_width, window_center_y], 3)
+    #optional window center dot and lines
+    if if_debug:
+        pygame.draw.circle(window,red,[window_center_x,window_center_y],5)
+        pygame.draw.line(window,red,[window_center_x,0],[window_center_x,window_height],3)
+        pygame.draw.line(window, red, [0, window_center_y], [window_width, window_center_y], 3)
 
     #draw cards
     # card placement
-    card_placements =[(window_center_x-card_width*2-37.5,window_center_y-card_height*2-37.5),
-                       (window_center_x - card_width - 12.5, window_center_y - card_height * 2 - 37.5),
-                       (window_center_x + 12.5, window_center_y - card_height * 2 - 37.5),
-                       (window_center_x + card_width + 37.5, window_center_y - card_height * 2 - 37.5),
-                       (window_center_x - card_width * 2 - 37.5, window_center_y - card_height - 12.5)]
-    for i in range(len(card_placements)):
-        window.blit(terence_card,card_placements[i])
+    card_gap=25
+    card_rects =[pygame.Rect(window_center_x-card_width*2-card_gap*1.5,window_center_y-card_height*2-card_gap*1.5,card_width,card_height),   #row 1
+                pygame.Rect(window_center_x-card_width-card_gap/2,window_center_y-card_height*2-card_gap*1.5,card_width,card_height),
+                pygame.Rect(window_center_x+card_gap/2,window_center_y-card_height*2-card_gap*1.5,card_width,card_height),
+                pygame.Rect(window_center_x+card_width+card_gap*1.5,window_center_y-card_height*2-card_gap*1.5,card_width,card_height),
+                pygame.Rect(window_center_x-card_width*2-card_gap*1.5,window_center_y-card_height-card_gap/2,card_width,card_height),       #row 2
+                pygame.Rect(window_center_x-card_width-card_gap/2,window_center_y-card_height-card_gap/2,card_width,card_height),
+                pygame.Rect(window_center_x+card_gap/2,window_center_y-card_height-card_gap/2,card_width,card_height),
+                pygame.Rect(window_center_x+card_width+card_gap*1.5,window_center_y-card_height-card_gap/2,card_width,card_height),
+                pygame.Rect(window_center_x-card_width*2-card_gap*1.5,window_center_y+card_gap/2,card_width,card_height),                   #row 3
+                pygame.Rect(window_center_x-card_width-card_gap/2,window_center_y+card_gap/2,card_width,card_height),
+                pygame.Rect(window_center_x+card_gap/2,window_center_y+card_gap/2,card_width,card_height),
+                pygame.Rect(window_center_x+card_width+card_gap*1.5,window_center_y+card_gap/2,card_width,card_height),
+                pygame.Rect(window_center_x-card_width*2-card_gap*1.5,window_center_y+card_height+card_gap*1.5,card_width,card_height),     #row 4
+                pygame.Rect(window_center_x-card_width-card_gap/2,window_center_y+card_height+card_gap*1.5,card_width,card_height),
+                pygame.Rect(window_center_x+card_gap/2,window_center_y+card_height+card_gap*1.5,card_width,card_height),
+                pygame.Rect(window_center_x+card_width+card_gap*1.5,window_center_y+card_height+card_gap*1.5,card_width,card_height)]
+
+    #draw the card
+    for card in range(len(card_rects)):
+        if cards_clicked[card]:
+            if card_numbers[card]==1:
+                window.blit(terence_card,card_rects[card])
+            elif card_numbers[card]==2:
+                window.blit(matilda_card,card_rects[card])
+            elif card_numbers[card]==3:
+                window.blit(bomb_card,card_rects[card])
+            elif card_numbers[card]==4:
+                window.blit(chuck_card,card_rects[card])
+            elif card_numbers[card]==5:
+                window.blit(red_card,card_rects[card])
+            elif card_numbers[card]==6:
+                window.blit(stella_card,card_rects[card])
+            elif card_numbers[card]==7:
+                window.blit(blues_card,card_rects[card])
+            elif card_numbers[card]==8:
+                window.blit(bubbles_card,card_rects[card])
+        else:
+            window.blit(hidden_card,card_rects[card])
+
 
     # window.blit(bubbles_card,[window_center_x-card_width-25,window_center_y-card_height//2])
     # window.blit(terence_card,[window_center_x+25,window_center_y-card_height//2])
