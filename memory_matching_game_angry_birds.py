@@ -144,11 +144,6 @@ pygame.draw.rect(bubbles_card,green,inner_rect)
 pygame.draw.rect(bubbles_card,blue,outer_rect,10,5)
 bubbles_card.blit(bubbles_image,[card_width/2-bubbles_image_w//2,card_height/2-bubbles_image_h//2])
 
-#card placement
-card_placements=[(window_center_x-card_width*2-37.5,window_center_y-card_height*2-50),
-                 (window_center_x-card_width-12.5,window_center_y-card_height*2-50),
-                 (window_center_x+12.5,window_center_y-card_height*2-50),
-                 (window_center_x+card_width+37.5,window_center_y-card_height*2-50)]
 
 #card shuffle
 max_cards=False
@@ -182,10 +177,18 @@ while True:
 
     #background colour
     window.fill(light_grey)
-    #window center
+    #window center dot and lines
     pygame.draw.circle(window,red,[window_center_x,window_center_y],5)
+    pygame.draw.line(window,red,[window_center_x,0],[window_center_x,window_height],3)
+    pygame.draw.line(window, red, [0, window_center_y], [window_width, window_center_y], 3)
 
     #draw cards
+    # card placement
+    card_placements =[(window_center_x-card_width*2-37.5,window_center_y-card_height*2-37.5),
+                       (window_center_x - card_width - 12.5, window_center_y - card_height * 2 - 37.5),
+                       (window_center_x + 12.5, window_center_y - card_height * 2 - 37.5),
+                       (window_center_x + card_width + 37.5, window_center_y - card_height * 2 - 37.5),
+                       (window_center_x - card_width * 2 - 37.5, window_center_y - card_height - 12.5)]
     for i in range(len(card_placements)):
         window.blit(terence_card,card_placements[i])
 
